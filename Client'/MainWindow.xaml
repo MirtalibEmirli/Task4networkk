@@ -1,0 +1,43 @@
+﻿<Window x:Class="Client_.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Client_"
+        mc:Ignorable="d"
+        Title="Client" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions >
+            <ColumnDefinition Width="1.7*"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <ListView ItemsSource="{Binding processList,UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" x:Name="prListView">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="ProcessName" DisplayMemberBinding="{Binding ProcessName}" Width="200"/>
+                    <GridViewColumn Header="Id" DisplayMemberBinding="{Binding Id}" Width="200"/>
+                    
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <StackPanel Grid.Column="1">
+            <Button  Content="Refresh" Click="Button_Click_1" Height="64"/>
+            <StackPanel Orientation="Horizontal">
+                <Label Margin="10" Content="prName" />
+                <TextBox Name="prName" Width="220"/>
+            </StackPanel>
+            <GroupBox Header="Mode" Margin="10" Width="228">
+                <StackPanel Orientation="Horizontal" Height="28" Margin="0,0,-18,0" >
+
+                    <RadioButton Name="Kill"  Content="Kill" GroupName="Mode" Width="63" />
+
+                    <RadioButton x:Name="Start" Content="Start" GroupName="Mode" IsChecked="True"/>
+                </StackPanel>
+            </GroupBox>
+
+            <Button Margin="10" Content="Run" Click="Button_Click" Height="54"/>
+        </StackPanel>
+        
+    </Grid>
+</Window>
