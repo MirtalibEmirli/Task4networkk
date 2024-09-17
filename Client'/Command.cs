@@ -10,7 +10,7 @@ namespace Client_
     {
         public string? Name { get; set; }
         public string? Type { get; set; }
-        public string? Refresh { get; set; }
+        public bool Refresh { get; set; }
         public int Id { get; set; }
 
     }

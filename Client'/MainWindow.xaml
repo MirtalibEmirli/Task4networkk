@@ -14,7 +14,7 @@
         <ListView ItemsSource="{Binding processList,UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" x:Name="prListView">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="ProcessName" DisplayMemberBinding="{Binding ProcessName}" Width="200"/>
+                    <GridViewColumn Header="ProcessName" DisplayMemberBinding="{Binding Name}" Width="200"/>
                     <GridViewColumn Header="Id" DisplayMemberBinding="{Binding Id}" Width="200"/>
                     
                 </GridView>
