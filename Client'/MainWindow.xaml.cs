@@ -33,7 +33,7 @@ namespace Client_
         {
             try
                 { 
-                    Application.Current.Dispatcher.Invoke(() =>
+                    Application.Current.Dispatcher.Invoke(() => 
                     {
                         MessageBox.Show("Run started");
                     });
@@ -45,10 +45,10 @@ namespace Client_
 
                     if (prListView.SelectedItem != null && Kill.IsChecked == true)
                     {
-                        var pr = prListView.SelectedItem as Process;///null gelir 
+                        var pr = prListView.SelectedItem as PRocessDTO;///null gelir 
                         Command command = new()
                         {
-                            Name = pr.ProcessName,
+                            Name = pr.Name,
                             Id = pr.Id,
                             Type =   "Kill"  
                         };
