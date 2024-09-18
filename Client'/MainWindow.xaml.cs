@@ -32,61 +32,74 @@ namespace Client_
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             try
-                { 
-                    Application.Current.Dispatcher.Invoke(() => 
-                    {
-                        MessageBox.Show("Run started");
-                    });
-
-                    var ip = "192.168.1.105";
-                    var port = 27001;
-                    using var client = new TcpClient(ip, port);
-                    using var stream = client.GetStream();
-
-                    if (prListView.SelectedItem != null && Kill.IsChecked == true)
-                    {
-                        var pr = prListView.SelectedItem as PRocessDTO;///null gelir 
-                        Command command = new()
-                        {
-                            Name = pr.Name,
-                            Id = pr.Id,
-                            Type =   "Kill"  
-                        };
-
-                        var prstring = JsonSerializer.Serialize(command);
-                        var buffer = Encoding.UTF8.GetBytes(prstring);
-                        stream.Write(buffer, 0, buffer.Length);
-                    }
-                    else 
-                    {
-                        Command command = new()
-                        {
-                            Name = prName.Text,
-                            Type =   "Start"
-                        };
-
-                        var prstring = JsonSerializer.Serialize(command);
-                        var buffer = Encoding.UTF8.GetBytes(prstring);
-                        stream.Write(buffer, 0, buffer.Length);
-                    }
-
-                   /* var bytes = new byte[1024];
-                    var bytesRead = stream.Read(bytes, 0, bytes.Length);
-                    var serverResponse = Encoding.UTF8.GetString(bytes, 0, bytesRead);
-
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        MessageBox.Show(serverResponse);
-                    });*/
-                 }
-                catch (Exception ex)
+            {
+                Application.Current.Dispatcher.Invoke(() =>
                 {
-                    Application.Current.Dispatcher.Invoke(() =>
+                    MessageBox.Show("Run started");
+                });
+
+                var ip = "192.168.1.105";
+                var port = 27001;
+                using var client = new TcpClient(ip, port);
+                using var stream = client.GetStream();
+
+                if (prListView.SelectedItem != null && Kill.IsChecked == true)
+                {
+                    var pr = prListView.SelectedItem as PRocessDTO;///null gelir 
+                    Command command = new()
                     {
-                        MessageBox.Show(ex.Message);
-                    });
-                } 
-            
+                        Name = pr.Name,
+                        Id = pr.Id,
+                        Type = "Kill"
+                    };
+
+                    var prstring = JsonSerializer.Serialize(command);
+                    var buffer = Encoding.UTF8.GetBytes(prstring);
+                    stream.Write(buffer, 0, buffer.Length);
+
+                    //recieve message
+                    var respond = new byte[1024];
+                    stream.Read(respond, 0, respond.Length);
+                    var data = Encoding.UTF8.GetString(respond);
+                    MessageBox.Show(data);
+
+                }
+                else
+                {
+                    Command command = new()
+                    {
+                        Name = prName.Text,
+                        Type = "Start"
+                    };
+
+                    var prstring = JsonSerializer.Serialize(command);
+                    var buffer = Encoding.UTF8.GetBytes(prstring);
+                    stream.Write(buffer, 0, buffer.Length);
+                    //recieve respond
+                    var respond = new byte[1024];
+                    var bytesRead = stream.Read(respond, 0, respond.Length);
+                    var data = Encoding.UTF8.GetString(respond);
+                    MessageBox.Show(data);
+
+                }
+
+                /* var bytes = new byte[1024];
+                 var bytesRead = stream.Read(bytes, 0, bytes.Length);
+                 var serverResponse = Encoding.UTF8.GetString(bytes, 0, bytesRead);
+
+                 Application.Current.Dispatcher.Invoke(() =>
+                 {
+                     MessageBox.Show(serverResponse);
+                 });*/
+            }
+            catch (Exception ex)
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    MessageBox.Show(ex.Message);
+                });
+            }
+
         }
 
 
@@ -111,10 +124,10 @@ namespace Client_
                 stream.Read(buffer2, 0, buffer2.Length);
                 var data = Encoding.UTF8.GetString(buffer2).TrimEnd('\0');
                 var processes = JsonSerializer.Deserialize<List<PRocessDTO>>(data);// 
-               
+
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    processList.Clear();  
+                    processList.Clear();
                     foreach (var process in processes)
                     {
                         processList.Add(process);

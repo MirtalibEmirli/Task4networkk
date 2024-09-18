@@ -26,7 +26,7 @@ var serverProcess = Task.Run(() =>
             if (bytesRead == 0)
             {
                 Console.WriteLine("No data received.");
-                continue; 
+                continue;
             }
             var recievedData = Encoding.UTF8.GetString(bytes).TrimEnd('\0');
             var command = JsonSerializer.Deserialize<Command>(recievedData);
@@ -37,13 +37,21 @@ var serverProcess = Task.Run(() =>
                     try
                     {
                         var process = Process.GetProcessById(command.Id);
-                        if (process != null) { process.Kill(); Console.WriteLine($"{process.ProcessName} killed"); }
+                        var message = $"{process.ProcessName} killed";
+                        if (process != null)
+                        {
+                            process.Kill();
+                            Console.WriteLine(message);
+                        }
+                        var respond = Encoding.UTF8.GetBytes(message);
+                        stream.Write(respond, 0, respond.Length);
+                      
                     }
                     catch (Exception ex)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
 
-                        Console.WriteLine("error killing "+ex.Message );
+                        Console.WriteLine("error killing " + ex.Message);
                         Console.ForegroundColor = ConsoleColor.White;
 
                     }
@@ -55,8 +63,11 @@ var serverProcess = Task.Run(() =>
                     try
                     {
                         var pr = Process.Start(command.Name);
+                        Console.ForegroundColor = ConsoleColor.Green;
                         var message = $"{command.Name} process started.";
                         Console.WriteLine(message);
+                        Console.ForegroundColor = ConsoleColor.White;
+
                         var bytes1 = Encoding.UTF8.GetBytes(message);
                         stream.Write(bytes1, 0, bytes1.Length);
                     }
